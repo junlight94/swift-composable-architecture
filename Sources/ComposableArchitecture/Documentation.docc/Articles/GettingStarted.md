@@ -1,7 +1,6 @@
 # Getting started
 
-Learn how to integrate the Composable Architecture into your project and write your first 
-application.
+Composable Architecture를 프로젝트에 통합하고, 첫 번째 애플리케이션을 작성하는 방법을 배워보세요.
 
 ## Adding the Composable Architecture as a dependency
 
