@@ -1,32 +1,26 @@
 @Tutorial(time: 20) { 
   @Intro(title: "Your first feature") {
-    Learn how to create a reducer to implement the logic and behavior of a feature, and then 
-    learn how to hook up that feature to a SwiftUI view.
+    리듀서(Reducer)를 생성하여 기능의 로직과 동작을 구현하는 방법을 배우고, 이후 해당 기능을 SwiftUI 뷰와 연결하는 방법을 익혀보세요.
   }
   
   @Section(title: "Create a reducer") {
     @ContentAndMedia {
-      The fundamental unit that features are built with in the Composable Architecture is the
-      ``ComposableArchitecture/Reducer()`` macro and ``ComposableArchitecture/Reducer`` protocol. A
-      conformance to that protocol represents the logic and behavior for a feature in your
-      application. This includes how to evolve the current state to the next state when an action is
-      sent into the system, and how effects communicate with the outside world and feed data back
-      into the system.
-      
-      And most importantly, the feature's core logic and behavior can be built in full isolation
-      with no mention of a SwiftUI view, which makes it easier to develop in isolation, easier
-      to reuse, and easier to test.
-      
-      Let's start by creating a simple reducer that encapsulates the logic of a counter. We will
-      add more interesting behavior to the feature, but let's start simple for now.
+      Composable Architecture에서 기능을 구성하는 기본 단위는 ``ComposableArchitecture/Reducer()`` 매크로와
+      ``ComposableArchitecture/Reducer`` 프로토콜입니다. 이 프로토콜을 준수한다는 것은 애플리케이션의 특정 기능에 대한 로직과 동작을 정의한다는 의미입니다.
+      여기에는 action이 시스템에 전달될 때 현재 state를 다음 state로 어떻게 변화시킬지, 그리고 effect가 외부와 통신하며 데이터를 시스템으로 다시 전달하는 방식을 포함합니다.
+
+      가장 중요한 점은, 기능의 핵심 로직과 동작이 SwiftUI 뷰와 완전히 분리된 상태에서 구축될 수 있다는 것입니다. 
+      이는 독립적으로 개발하기 쉬워지고, 재사용 가능성이 높아지며, 테스트도 훨씬 간단해집니다.
+
+      이제 간단한 리듀서(Reducer)를 만들어, 카운터 기능의 로직을 캡슐화하는 작업을 시작해 봅시다. 
+      앞으로 흥미로운 기능들을 추가할 계획이지만, 지금은 간단한 것부터 시작하겠습니다.
     }
     @Steps {
       @Step {
-        Create a new Swift file named CounterFeature.swift and import the Composable Architecture.
+        새로운 Swift 파일 CounterFeature.swift을 생성하고, ComposableArchitecture를 import 합니다.
         @Code(name: "CounterFeature.swift", file: 01-01-01-code-0001.swift)
         
-        > Note: Before importing the library you will need to depend on it by [adding it to your 
-        Xcode project settings or SPM package](http://github.com/pointfreeco/swift-composable-architecture#Installation).
+        > Note: 라이브러리를 가져오기 전에, [Xcode 프로젝트 설정 또는 SPM 패키지를 통해 해당 라이브러리를 의존성으로 추가](http://github.com/pointfreeco/swift-composable-architecture#Installation) 해야 합니다.
       }
       
       @Step {

@@ -1,13 +1,13 @@
 @Tutorials(name: "The Composable Architecture") {
   @Intro(title: "Meet the Composable Architecture") {
-    The Composable Architecture (TCA, for short) is a library for building applications in a 
-    consistent and understandable way, with composition, testing, and ergonomics in mind. It can be 
-    used in SwiftUI, UIKit, and more, and on any Apple platform (iOS, macOS, tvOS, and watchOS).  
+    Composable Architecture(TCA)는 애플리케이션을 일관성 있고 이해하기 쉬운 방식으로 개발하기 위한 라이브러리입니다. 
+    이 라이브러리는 구성(composition), 테스트(testing), 사용성(ergonomics)을 중점으로 설계되었습니다. 
+    TCA는 SwiftUI, UIKit 등 다양한 프레임워크에서 사용할 수 있으며, iOS, macOS, tvOS, watchOS 등 모든 Apple 플랫폼에서 활용 가능합니다.  
   }
   
   @Chapter(name: "Essentials") {
-    Explore the basics of creating a new feature in the Composable Architecture, layering on
-    side effects, and writing a complete test suite for the feature.
+    Composable Architecture에서 새로운 기능을 만드는 기본적인 과정을 탐구해보세요. 사이드 이펙트를 추가하고, 
+    해당 기능을 위한 완전한 테스트 스위트(test suite)를 작성하는 방법도 다룹니다.
     
     @Image(source: "01-homepage.png")
 
@@ -18,8 +18,8 @@
   }
   
   @Chapter(name: "Navigation") {
-    Learn how to model your domains for navigation from parent feature to child feature, and how to
-    do so in a concise manner using optionals, enums and collections.
+    부모 기능에서 자식 기능으로의 네비게이션을 모델링하는 방법을 배우고, 
+    옵셔널(optionals), 열거형(enums), 그리고 컬렉션(collections)을 사용하여 이를 간결하게 구현하는 방법을 익혀보세요.
     
     @Image(source: "02-homepage.png")
 
@@ -30,19 +30,16 @@
   }
   
   @Resources {
-    Additional resources for exploring how to build applications using the Composable Architecture.
+    Composable Architecture를 사용하여 애플리케이션을 구축하는 방법을 더욱 깊이 탐구할 수 있는 추가 자료를 확인해보세요.
     
     @Videos(destination: "https://www.pointfree.co") {
-      Point-Free is a video series that explores advanced topics in the Swift programming language.
-      We built nearly every part of the Composable Architecture from first principles in a [long
-      series of episodes](https://www.pointfree.co/collections/composable-architecture).
+      Point-Free는 Swift 프로그래밍 언어의 고급 주제를 탐구하는 비디오 시리즈입니다. 이 시리즈에서는 Composable Architecture의 거의 모든 부분을 처음부터 설계 원칙에 따라 구축하는 과정을 [여러 에피소드](https://www.pointfree.co/collections/composable-architecture)에 걸쳐 다룹니다.
     }
       
     @Forums(
       destination: "https://github.com/pointfreeco/swift-composable-architecture/discussions"
     ) {
-      There are multiple places online to discuss the Composable Architecture with others that
-      are also using the library.
+      Composable Architecture를 사용 중인 다른 사람들과 함께 논의할 수 있는 다양한 온라인 커뮤니티가 있습니다.
       
       - [Join the community Slack](http://pointfree.co/slack-invite)
       - [Discuss on GitHub](https://github.com/pointfreeco/swift-composable-architecture/discussions)
@@ -52,8 +49,7 @@
     }
       
     @SampleCode(destination: "https://github.com/pointfreeco/swift-composable-architecture/tree/main/Examples") {
-      The library comes with lots of demo applications and case studies built in the 
-      Composable Architecture.
+      이 라이브러리는 Composable Architecture로 구축된 다양한 데모 애플리케이션과 사례 연구(case studies)를 제공합니다.
       
       - [Case studies](https://github.com/pointfreeco/swift-composable-architecture/tree/main/Examples/CaseStudies)
       - [Search](https://github.com/pointfreeco/swift-composable-architecture/tree/main/Examples/Search)
@@ -65,7 +61,7 @@
     }
     
     @Documentation(destination: "https://pointfreeco.github.io/swift-composable-architecture/main/documentation/composablearchitecture/") {
-      Browse the full documentation online.
+      전체 문서를 온라인에서 확인해보세요.
       
       - [GitHub](https://pointfreeco.github.io/swift-composable-architecture/main/documentation/composablearchitecture)
     }
