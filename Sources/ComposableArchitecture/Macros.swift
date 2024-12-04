@@ -1,8 +1,8 @@
 import Observation
 
-/// Helps implement the conformance to the ``Reducer`` protocol for a type.
+/// 해당 타입이 ``Reducer`` 프로토콜을 구현할 수 있도록 도와줍니다.
 ///
-/// See the article <doc:Reducer> for more information about the macro and ``Reducer`` protocol.
+/// 매크로와 ``Reducer`` 프로토콜에 대한 자세한 내용은 <doc:Reducer> 문서를 참고하세요.
 @attached(
   member,
   names:

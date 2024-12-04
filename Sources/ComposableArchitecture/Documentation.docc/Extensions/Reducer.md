@@ -1,10 +1,9 @@
 # ``ComposableArchitecture/Reducer``
 
-The ``Reducer`` protocol describes how to evolve the current state of an application to the next
-state, given an action, and describes what ``Effect``s should be executed later by the store, if
-any. Types that conform to this protocol represent the domain, logic and behavior for a feature.
-Conformances to ``Reducer`` can be written by hand, but the ``Reducer()`` can make your reducers 
-more concise and more powerful.
+``Reducer`` 프로토콜은 주어진 액션에 따라 애플리케이션의 현재 상태를 다음 상태로 변화시키는 방법과, 
+필요한 경우 스토어가 이후 실행해야 할 ``Effect``를 정의합니다. 이 프로토콜을 준수하는 타입은 특정 기능의 도메인, 로직, 동작을 표현합니다.
+
+``Reducer``를 직접 구현할 수도 있지만, ``Reducer()`` 매크로를 사용하면 Reducer를 더 간결하고 강력하게 작성할 수 있습니다.
 
 * [Conforming to the Reducer protocol](#Conforming-to-the-Reducer-protocol)
 * [Using the @Reducer macro](#Using-the-Reducer-macro)
@@ -21,13 +20,11 @@ more concise and more powerful.
 
 ## Conforming to the Reducer protocol
 
-The bare minimum of conforming to the ``Reducer`` protocol is to provide a ``Reducer/State`` type
-that represents the state your feature needs to do its job, a ``Reducer/Action`` type that
-represents the actions users can perform in your feature (as well as actions that effects can
-feed back into the system), and a ``Reducer/body-20w8t`` property that compose your feature
-together with any other features that are needed (such as for navigation).
+Reducer 프로토콜을 준수하기 위해 최소한 다음 세 가지를 제공해야 합니다:
+``Reducer`` 프로토콜을 준수하려면, 해당 기능이 필요한 상태를 나타내는 ``Reducer/State`` 타입과, 사용자가 수행할 수 있는 액션이나 효과로부터 시스템에 전달될 액션을 나타내는 ``Reducer/Action`` 타입을 정의해야 합니다. 
+또한, 네비게이션 등 다른 기능과 조합하여 기능을 구성하는 ``Reducer/body-20w8t`` 프로퍼티를 제공해야 합니다.
 
-As a very simple example, a "counter" feature could model its state as a struct holding an integer:
+간단한 예로, “카운터” 기능의 상태는 정수를 포함하는 구조체로 모델링할 수 있습니다:
 
 ```swift
 struct CounterFeature: Reducer {
@@ -38,11 +35,10 @@ struct CounterFeature: Reducer {
 }
 ```
 
-> Note: We have added the ``ObservableState()`` to `State` here so that the view can automatically
-> observe state changes. In future versions of the library this macro will be automatically applied
-> by the ``Reducer()`` macro.
+> Note: 여기서 State에 ``ObservableState()``를 추가하여 뷰가 상태 변경을 자동으로 관찰할 수 있도록 설정했습니다. 
+앞으로 릴리스될 라이브러리 버전에서는 이 매크로가 ``Reducer()`` 매크로에 의해 자동으로 적용될 예정입니다.
 
-The actions would be just two cases for tapping an increment or decrement button:
+액션은 증가 버튼과 감소 버튼을 눌렀을 때를 처리하는 두 가지 케이스로 나뉩니다:
 
 ```swift
 struct CounterFeature: Reducer {
@@ -54,9 +50,8 @@ struct CounterFeature: Reducer {
 }
 ```
 
-The logic of your feature is implemented by mutating the feature's current state when an action
-comes into the system. This is most easily done by constructing a ``Reduce`` inside the
-``Reducer/body-20w8t`` of your reducer:
+기능의 로직은 액션이 시스템으로 들어올 때 해당 기능의 현재 상태를 변경함으로써 구현됩니다. 
+이는 리듀서의 ``Reducer/body``에 ``Reduce``를 구성하여 가장 쉽게 처리할 수 있습니다.
 
 ```swift
 struct CounterFeature: Reducer {
@@ -76,14 +71,12 @@ struct CounterFeature: Reducer {
 }
 ```
 
-The ``Reduce`` reducer's first responsibility is to mutate the feature's current state given an
-action. Its second responsibility is to return effects that will be executed asynchronously and feed
-their data back into the system. Currently `Feature` does not need to run any effects, and so
-``Effect/none`` is returned.
+``Reduce`` 리듀서의 첫 번째 역할은 주어진 액션에 따라 기능의 현재 상태를 변경하는 것입니다. 
+두 번째 역할은 비동기로 실행될 효과를 반환하고, 이 효과의 결과 데이터를 시스템으로 다시 전달하는 것입니다. 
+현재 Feature는 실행해야 할 효과가 없으므로, ``Effect/none``을 반환합니다.
 
-If the feature does need to do effectful work, then more would need to be done. For example, suppose
-the feature has the ability to start and stop a timer, and with each tick of the timer the `count`
-will be incremented. That could be done like so:
+하지만, 만약 기능에서 효과를 동반한 작업이 필요하다면 추가적인 구현이 필요합니다. 
+예를 들어, 해당 기능이 타이머를 시작하거나 정지할 수 있는 기능을 갖추고, 타이머가 틱(tick)할 때마다 count가 증가한다고 가정해 봅시다. 이 기능은 다음과 같이 구현할 수 있습니다:
 
 ```swift
 struct CounterFeature: Reducer {
@@ -132,19 +125,14 @@ struct CounterFeature: Reducer {
 }
 ```
 
-> Note: This sample emulates a timer by performing an infinite loop with a `Task.sleep` inside. This
-> is simple to do, but is also inaccurate since small imprecisions can accumulate. It would be
-> better to inject a clock into the feature so that you could use its `timer` method. Read the
-> <doc:DependencyManagement> and <doc:Testing> articles for more information.
-
-That is the basics of implementing a feature as a conformance to ``Reducer``. 
+> Note: 이 예제에서는 Task.sleep을 사용한 무한 루프로 타이머를 동작시킵니다. 
+이 방법은 간단히 구현할 수 있지만, 작은 오차가 누적되어 정확도가 떨어질 수 있습니다.
+기능에 타이머를 사용하는 clock을 주입하면 더 나은 방식으로 구현할 수 있습니다. 자세한 내용은 <doc:DependencyManagement>와 <doc:Testing> 문서를 참고하세요.
 
 ## Using the @Reducer macro
 
-While you technically can conform to the ``Reducer`` protocol directly, as we did above, the
-``Reducer()`` macro can automate many aspects of implementing features for you. At a bare minimum,
-all you have to do is annotate your reducer with `@Reducer` and you can even drop the `Reducer`
-conformance:
+``Reducer`` 프로토콜을 직접 준수하여 구현할 수도 있지만, 위에서 살펴본 것처럼 ``Reducer()`` 매크로를 사용하면 기능 구현의 많은 부분을 자동화할 수 있습니다. 
+최소한으로는 리듀서를 @Reducer로 주석 처리하면 되고, Reducer 프로토콜 준수 선언조차 생략할 수 있습니다:
 
 ```diff
 +@Reducer
@@ -173,12 +161,11 @@ conformance:
  }
 ```
 
-There are a number of things the ``Reducer()`` macro does for you:
+``Reducer()`` 매크로는 여러 작업을 자동으로 처리해줍니다:
 
 ### @CasePathable and @dynamicMemberLookup enums
 
-The `@Reducer` macro automatically applies the [`@CasePathable`][casepathable-docs] macro to your
-`Action` enum:
+`@Reducer` 매크로는 Action 열거형(enum)에 [`@CasePathable`][casepathable-docs] 매크로를 자동으로 적용합니다.
 
 ```diff
 +@CasePathable
@@ -187,17 +174,14 @@ The `@Reducer` macro automatically applies the [`@CasePathable`][casepathable-do
  }
 ```
 
-[Case paths][casepaths-gh] are a tool that bring the power and ergonomics of key paths to enum
-cases, and they are a vital tool for composing reducers together.
+[Case paths][casepaths-gh]는 열거형(enum) 케이스에 키 경로(key path)의 기능과 편의성을 제공하는 도구로, 리듀서를 조합하는 데 필수적인 도구입니다.
 
-In particular, having this macro applied to your `Action` enum will allow you to use key path
-syntax for specifying enum cases in various APIs in the library, such as
+특히, Action 열거형에 이 매크로가 적용되면 라이브러리의 다양한 API에서 열거형 케이스를 지정할 때 키 경로 구문을 사용할 수 있습니다. 예를 들어, 다음과 같은 API에서 활용할 수 있습니다:
 ``Reducer/ifLet(_:action:destination:fileID:filePath:line:column:)-4ub6q``,
-``Reducer/forEach(_:action:destination:fileID:filePath:line:column:)-9svqb``, ``Scope``, and more.
+``Reducer/forEach(_:action:destination:fileID:filePath:line:column:)-9svqb``, ``Scope``, 그 외 여러 API
 
-Further, if the ``Reducer/State`` of your feature is an enum, which is useful for modeling a feature
-that can be one of multiple mutually exclusive values, the ``Reducer()`` will apply the
-`@CasePathable` macro, as well as `@dynamicMemberLookup`:
+또한, 기능의 ``Reducer/State``가 열거형(enum)일 경우, 즉 하나의 상태가 여러 상호 배타적인 값 중 하나로 모델링될 때 유용한 경우, 
+``Reducer()``는 `@CasePathable` 매크로뿐 아니라 `@dynamicMemberLookup`도 자동으로 적용합니다.
 
 ```diff
 +@CasePathable
@@ -207,10 +191,8 @@ that can be one of multiple mutually exclusive values, the ``Reducer()`` will ap
  }
 ```
 
-This will allow you to use key path syntax for specifying case paths to the `State`'s cases, as well
-as allow you to use dot-chaining syntax for optionally extracting a case from the state. This can be
-useful when using the operators that come with the library that allow for driving navigation from an
-enum of options:
+이를 통해 State의 케이스를 키 경로 구문으로 지정할 수 있을 뿐만 아니라, 점 체이닝(dot-chaining) 구문을 사용해 상태에서 특정 케이스를 선택적으로 추출할 수도 있습니다. 
+이는 열거형으로 정의된 옵션을 기반으로 네비게이션을 제어할 수 있는 라이브러리의 연산자를 사용할 때 특히 유용합니다:
 
 ```swift
 .sheet(
@@ -220,38 +202,32 @@ enum of options:
 }
 ```
 
-The syntax `state: \.destination?.editForm` is only possible due to both `@dynamicMemberLookup` and
-`@CasePathable` being applied to the `State` enum.
+`state: \.destination?.editForm` 구문은 `State` 열거형에 `@dynamicMemberLookup`과 `@CasePathable`이 모두 적용되었기 때문에 가능합니다.
 
 ### Automatic fulfillment of reducer requirements
 
-The ``Reducer()`` macro will automatically fill in any ``Reducer`` protocol requirements that you
-leave off. For example, something as simple as this compiles:
+
+``Reducer()`` 매크로는 작성하지 않은 ``Reducer`` 프로토콜 요구사항을 자동으로 채워줍니다. 예를 들어, 아래와 같이 간단한 코드도 컴파일됩니다:
 
 ```swift
 @Reducer
 struct Feature {}
 ```
 
-The `@Reducer` macro will automatically insert an empty ``Reducer/State`` struct, an empty
-``Reducer/Action`` enum, and an empty ``Reducer/body-swift.property``. This effectively means that
-`Feature` is a logicless, behaviorless, inert reducer.
+`@Reducer` 매크로는 빈 ``Reducer/State`` 구조체, 빈 ``Reducer/Action`` 열거형, 그리고 빈 ``Reducer/body-swift.property``를 자동으로 추가합니다. 
+이로 인해 Feature는 로직도, 동작도 없는 비활성 리듀서로 동작하게 됩니다.
 
-Having these requirements automatically fulfilled for you can be handy for slowly filling them in
-with their real implementations. For example, this `Feature` reducer could be integrated in a parent
-domain using the library's navigation tools, all without having implemented any of the domain yet.
-Then, once we are ready we can start implementing the real logic and behavior of the feature.
+이 요구사항이 자동으로 충족되면, 이후 실제 구현을 천천히 추가해 나가는 데 유용합니다. 
+예를 들어, 이 Feature 리듀서는 아직 도메인을 구현하지 않아도, 라이브러리의 네비게이션 도구를 사용해 상위 도메인에 통합할 수 있습니다. 
+이후 준비가 되면 실제 로직과 동작을 구현해 나갈 수 있습니다.
 
 ### Destination and path reducers
 
-There is a common pattern in the Composable Architecture of representing destinations a feature can
-navigate to as a reducer that operates on enum state, with a case for each feature that can be
-navigated to. This is explained in great detail in the <doc:TreeBasedNavigation> and
-<doc:StackBasedNavigation> articles.
+Composable Architecture에서 자주 사용되는 패턴 중 하나는 기능이 이동할 수 있는 대상(destination)을 열거형 상태에서 각 대상 기능에 해당하는 케이스로 표현한 리듀서로 모델링하는 것입니다. 
+이 패턴은 <doc:TreeBasedNavigation> 및 <doc:StackBasedNavigation> 문서에서 자세히 설명되어 있습니다.
 
-This form of domain modeling can be very powerful, but also incur a bit of boilerplate. For example,
-if a feature can navigate to 3 other features, then one might have a `Destination` reducer like the
-following:
+이러한 도메인 모델링 방식은 매우 강력하지만, 약간의 반복적인 코드(boilerplate)를 동반할 수 있습니다. 
+예를 들어, 특정 기능이 3개의 다른 기능으로 이동할 수 있다고 가정하면, 아래와 같은 `Destination` 리듀서를 작성해야 할 수도 있습니다:
 
 ```swift
 @Reducer
@@ -281,12 +257,10 @@ struct Destination {
 }
 ```
 
-It's not the worst code in the world, but it is 24 lines with a lot of repetition, and if we need to
-add a new destination we must add a case to the ``Reducer/State`` enum, a case to the
-``Reducer/Action`` enum, and a ``Scope`` to the ``Reducer/body-swift.property``.
+이 코드가 최악은 아니지만, 24줄에 달하는 반복적인 코드가 많고, 새로운 대상을 추가하려면 여러 곳에 변경을 가해야 합니다.
+구체적으로는 ``Reducer/State`` 열거형에 새로운 케이스를 추가하고, ``Reducer/Action`` 열거형에 해당 케이스를 추가하며, ``Reducer/body-swift.property``에 새로운 Scope를 정의해야 합니다.
 
-The ``Reducer()`` macro is now capable of generating all of this code for you from the following
-simple declaration
+하지만 이제 ``Reducer()`` 매크로를 사용하면, 아래와 같은 간단한 선언만으로 이러한 모든 코드를 자동으로 생성할 수 있습니다:
 
 ```swift
 @Reducer
@@ -297,10 +271,9 @@ enum Destination {
 }
 ```
 
-24 lines of code has become 6. The `@Reducer` macro can now be applied to an _enum_ where each case
-holds onto the reducer that governs the logic and behavior for that case. Further, when using the
-``Reducer/ifLet(_:action:)`` operator with this style of `Destination` enum reducer you can
-completely leave off the trailing closure as it can be automatically inferred:
+24줄의 코드가 6줄로 줄어들었습니다. `@Reducer` 매크로를 이제 열거형(enum)에 적용할 수 있으며, 각 케이스는 해당 케이스의 로직과 동작을 관리하는 리듀서를 포함합니다.
+
+또한, 이 스타일의 `Destination` 열거형 리듀서와 함께 ``Reducer/ifLet(_:action:)`` 연산자를 사용할 때, 자동으로 추론으로 인해서 후행 클로저를 완전히 생략할 수 있습니다.
 
 ```diff
  Reduce { state, action in
@@ -312,9 +285,8 @@ completely leave off the trailing closure as it can be automatically inferred:
 -}
 ```
 
-This pattern also works for `Path` reducers, which is common when dealing with
-<doc:StackBasedNavigation>, and in that case you can leave off the trailing closure of the
-``Reducer/forEach(_:action:)`` operator:
+이 패턴은 <doc:StackBasedNavigation>과 같이 경로 기반의 네비게이션을 처리할 때 자주 사용되는 Path 리듀서에도 적용됩니다. 
+이 경우, ``Reducer/forEach(_:action:)`` 연산자의 후행 클로저를 생략할 수 있습니다:
 
 ```diff
 Reduce { state, action in
@@ -331,6 +303,10 @@ boilerplate when using the initializer
 ``SwiftUI/NavigationStack/init(path:root:destination:fileID:filePath:line:column:)`` that comes with the library. 
 In the last trailing closure you can use the ``Store/case`` computed property to switch on the 
 `Path.State` enum and extract out a store for each case:
+
+또한, 특히 `Path` 리듀서의 경우, ``Reducer()`` 매크로는 라이브러리에서 제공하는
+``SwiftUI/NavigationStack/init(path:root:destination:fileID:filePath:line:column:)`` 초기화를 사용할 때 반복적인 코드를 줄이는 데 도움을 줍니다. 
+마지막 후행 클로저에서는 ``Store/case`` 계산 속성을 사용하여 `Path.State` 열거형을 스위치 구문으로 처리하고, 각 케이스에 대해 적절한 스토어를 추출할 수 있습니다:
 
 ```swift
 NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
@@ -349,17 +325,15 @@ NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
 
 #### Navigating to non-reducer features
 
-There are many times that you want to present or navigate to a feature that is not modeled with a
-Composable Architecture reducer. This can happen with legacy features that are not built with the
-Composable Architecture, or with features that are very simple and do not need a fully built
-reducer.
+Composable Architecture 리듀서로 모델링되지 않은 기능으로 이동하거나 해당 기능을 표시해야 할 때가 종종 있습니다.
+이런 상황은 Composable Architecture로 구축되지 않은 기존 기능(legacy features)이나, 
+매우 단순하여 완전한 리듀서가 필요하지 않은 기능에서 발생할 수 있습니다.
 
-In those cases you can use the ``ReducerCaseIgnored()`` and ``ReducerCaseEphemeral()`` macros to
-annotate cases that are not powered by reducers. See the documentation for those macros for more
-details.
+이러한 경우, ``ReducerCaseIgnored()`` 및 ``ReducerCaseEphemeral()`` 매크로를 사용해 리듀서가 필요하지 않은 케이스를 주석 처리할 수 있습니다.
+이 매크로들에 대한 자세한 내용은 해당 문서를 참고하세요.
 
-As an example, suppose that you have a feature that can navigate to multiple features, all of 
-which are Composable Architecture features except for one:
+예를 들어, 특정 기능이 여러 다른 기능으로 네비게이션할 수 있다고 가정해 보겠습니다.
+이 중 대부분은 Composable Architecture로 구축된 기능이지만, 하나는 그렇지 않은 경우입니다:
 
 ```swift
 @Reducer
@@ -371,10 +345,11 @@ enum Destination {
 }
 ```
 
-In this situation the `.item` case holds onto a plain item and not a full reducer, and for that 
-reason we have to ignore it from some of `@Reducer`'s macro expansion.
 
-Then, to present a view from this case one can do:
+이 상황에서는 `.item` 케이스가 전체 리듀서가 아닌 단순한 항목(item)을 보유하고 있습니다.
+이러한 이유로 `@Reducer` 매크로의 일부 확장에서 이 케이스를 제외해야 합니다.
+
+그런 다음, 이 케이스에서 뷰를 표시하려면 다음과 같이 할 수 있습니다:
 
 ```swift
 .sheet(item: $store.scope(state: \.destination?.item, action: \.destination.item)) { store in
@@ -382,15 +357,13 @@ Then, to present a view from this case one can do:
 }
 ```
 
-> Note: The ``Store/withState(_:)`` is necessary because the value held inside the `.item` case
-does not have the ``ObservableState()`` macro applied, nor should it. And so using `withState`
-is a way to get access to the state in the store without any observation taking place.
+> Note: ``Store/withState(_:)``는 `.item` 케이스에 포함된 값에 ``ObservableState()`` 매크로가 적용되지 않았기 때문에 필요합니다. 
+또한, 해당 값에는 ``ObservableState()`` 매크로가 적용될 필요도 없습니다. `withState`를 사용하면 상태 관찰(observation) 없이 스토어에 있는 상태에 접근할 수 있는 방법을 제공합니다.
 
 #### Synthesizing protocol conformances on State and Action
 
-Since the `State` and `Action` types are generated automatically for you when using `@Reducer` on an
-enum, you must extend these types yourself to synthesize conformances of `Equatable`, `Hashable`,
-_etc._:
+`@Reducer`를 열거형(enum)에 사용할 때, `State`와 `Action` 타입은 자동으로 생성됩니다. 따라서, 
+이러한 타입에 대해 `Equatable`, `Hashable` 등의 준수를 추가하려면 직접 확장(extend)해야 합니다:
 
 ```swift
 @Reducer

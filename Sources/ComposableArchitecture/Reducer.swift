@@ -1,5 +1,5 @@
-/// A protocol that describes how to evolve the current state of an application to the next state,
-/// given an action, and describes what ``Effect``s should be executed later by the store, if any.
+/// 애플리케이션에서 주어진 액션에 따라 현재 상태를 다음 상태로 변화시키는 방법을 정의하는 프로토콜입니다.
+/// 또한, 스토어가 실행해야 할 ``Effect``가 있다면 이를 함께 지정합니다.
 public protocol Reducer<State, Action> {
   /// A type that holds the current state of the reducer.
   associatedtype State
